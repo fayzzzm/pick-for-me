@@ -1,8 +1,18 @@
 type IObject = Record<string, any>;
 
-export const pickForMe = (object: IObject, keys: string[]): string => {
-    const stringify = JSON.stringify(object);
-    const regex: RegExp = new RegExp(`${keys.join('|')}`, 'gi');
+const pickForMe = (object: IObject, keys: string[]) => Object.keys(object).filter((key) => {
+  if (keys.indexOf(key) > -1) {
+    return true;
+  }
+  return false;
+}).map((key: string) => object[key]) as string[];
 
-    return stringify.replace(regex, '');
-}
+const pickForMeArray = <T>(array: T[], startIndex?: number, endIndex?: number): T[] => {
+  const { length } = array;
+  return [...array].slice(startIndex || 0, endIndex || length);
+};
+
+export = {
+  pickForMe,
+  pickForMeArray,
+};

@@ -1,1 +1,4 @@
-export declare const pickForMe: (object: Record<string, any>, keys: string[]) => string;
+export declare const pickForMe: (
+  object: Record<string, any>,
+  keys: string[]
+) => string;
