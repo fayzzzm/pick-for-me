@@ -14,5 +14,9 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["@typescript-eslint"],
-  rules: {},
+  rules: {
+    "operator-linebreak": 0,
+    "no-bitwise": 0,
+    "import/no-unresolved": 0,
+  },
 };
