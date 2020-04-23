@@ -2,8 +2,8 @@
 // eslint-disable-next-line spaced-comment
 /// <reference path="../types/index.d.ts" />
 
-
 const PickForMe = {} as (IPickFunctions & IPickConvertFunctions);
+
 PickForMe.fieldsByKeys = (object, keys) => Object.keys(object)
   .filter((key) => {
     if (keys.indexOf(key) > -1) {
