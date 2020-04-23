@@ -1,4 +1,4 @@
-export function SpaceCurrency(initialCurrency:number) {
+export const spaceCurrency = (initialCurrency:number): string => {
     const value = (Array as any).from(String(initialCurrency))
         .reverse()
         .join('')

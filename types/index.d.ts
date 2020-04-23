@@ -8,7 +8,6 @@ declare interface IPickFunctions {
 
 declare interface IPickConvertFunctions {
     stringToRegex: (pattern: string, flags?: ['g', 'i', 'm']) => RegExp;
-    SpaceCurrency: (initialCurrency: number) => RegExp;
 }
 
 declare module 'that-is';
