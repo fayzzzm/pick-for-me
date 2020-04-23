@@ -18,5 +18,6 @@ module.exports = {
     'operator-linebreak': 0,
     'no-bitwise': 0,
     'import/no-unresolved': 0,
+    'implicit-arrow-linebreak': 0,
   },
 };
