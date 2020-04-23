@@ -10,4 +10,5 @@ export function SpaceCurrency(initialCurrency:number) {
                 .join(''),
         )
         .join(' ');
+    return value;
 }
