@@ -7,7 +7,7 @@ declare interface IPickFunctions {
 }
 
 declare interface IPickConvertFunctions {
-    stringToRegex: (pattern: string, flags?: ['g', 'i', 'm']) => RegExp;
+  stringToRegex: (pattern: string, flags?: ['g', 'i', 'm']) => RegExp;
 }
 
 declare module 'that-is';
