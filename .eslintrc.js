@@ -3,7 +3,7 @@ module.exports = {
     browser: true,
     es6: true,
   },
-  extends: ['airbnb-base'],
+  extends: ['eslint:recommended', 'airbnb-base'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
@@ -24,5 +24,6 @@ module.exports = {
     'space-unary-ops': 0,
     'no-plusplus': 0,
     'no-useless-constructor': 0,
+    'no-param-reassign': 0,
   },
 };

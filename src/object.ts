@@ -1,34 +1,32 @@
-// eslint-disable-next-line spaced-comment
-/// <reference path="../types/index.d.ts" />
-
 import That from 'that-is';
 
-const copyObject = <T extends Object>(obj: T) => JSON.parse(JSON.stringify(obj));
-const objectToString = <T extends Object>(obj: T): string => JSON.stringify(obj);
+const copyObject = (obj: Record<string, any>) => JSON.parse(JSON.stringify(obj));
+const objectToString = (obj: Record<string, any>): string => JSON.stringify(obj);
 
-const deepAssign = <T extends Object, S extends Object>(dest: T, src: S): T & S => {
-  if (objectToString(dest) === objectToString(src)) {
-    return dest as any;
-  }
+type InterfaceType = {
+  [index: string]: any;
+};
+
+const deepAssign = <T = InterfaceType, S = InterfaceType>(dest: T, src: S): T & S => {
   Object.keys(src).forEach((key: string) => {
-    const srcValue = (src as any)[key];
-    if ((dest as any)[key]) {
-      const destValue = (dest as any)[key];
+    const srcValue = (src as InterfaceType)[key];
+
+    if (Object.prototype.hasOwnProperty.call(dest, key)) {
+      const destValue = (dest as InterfaceType)[key];
       if (That.isObject(destValue) && That.isObject(srcValue)) {
         deepAssign(destValue, srcValue);
       } else {
-        // eslint-disable-next-line no-param-reassign
-        (dest as any)[key] = srcValue;
+        (dest as InterfaceType)[key] = srcValue;
       }
     } else {
-      // eslint-disable-next-line no-param-reassign
-      (dest as any)[key] = srcValue;
+      (dest as InterfaceType)[key] = srcValue;
     }
   });
-  return dest as any;
+
+  return dest as T & S;
 };
 
-const objectKeysToString = <T extends Object>(object: T): any => {
+const objectKeysToString = <T = InterfaceType>(object: T): any => {
   const strKeys: any = [];
   const deepIntoKey = (obj: any, keys: string[]) => {
     Object.keys(obj).forEach((key: string) => {
@@ -47,67 +45,43 @@ const objectKeysToString = <T extends Object>(object: T): any => {
   return strKeys;
 };
 
-const objectByKeys = <T extends Object>(object: T, keys: string[]) => {
-  const deepGetValue = (value: any, pattern: string): any => {
-    if (pattern.length === 0) {
-      return value;
+const deepGetValue = (value: any, pattern: string): any => {
+  if (pattern.length === 0) {
+    return value;
+  } else {
+    if (/^\.?\w+/.test(pattern)) {
+      const key = (pattern.match(/^\.?(\w+)/) || [])[1];
+      return deepGetValue(value[key], pattern.replace(/^\.?\w+/, ''));
+    } else if (/^\[\d+\]/.test(pattern)) {
+      const index = (pattern.match(/^\[(\d)\]/) || [])[1];
+      return deepGetValue(value[index], pattern.replace(/^\[\d+\]/, ''));
     } else {
-      if (/^\.?\w+/.test(pattern)) {
-        const key = (pattern.match(/^\.?(\w+)/) || [])[1];
-        return deepGetValue(value[key], pattern.replace(/^\.?\w+/, ''));
-      } else if (/^\[\d+\]/.test(pattern)) {
-        const index = (pattern.match(/^\[(\d)\]/) || [])[1];
-        return deepGetValue(value[index], pattern.replace(/^\[\d+\]/, ''));
-      } else {
-        return 'invalid';
-      }
+      return 'invalid';
     }
-  };
+  }
+};
 
-  return keys.reduce((t: Object, key: string) => {
+const objectByKeys = <T = InterfaceType>(object: T, keys: string[]) =>
+  keys.reduce((t: Object, key: string) => {
     const value = deepGetValue(object, key);
-    // eslint-disable-next-line no-param-reassign
-    (t as any)[key] = value;
+    (t as InterfaceType)[key] = value;
 
     return t;
   }, {});
-};
 
-const copyDeep = <T extends Object, S extends Object>(dest: T, src: S): T => {
-  if ((dest as any) === src) {
-    return dest as any;
-  }
-
+const copyDeep = <T = InterfaceType, S = InterfaceType>(dest: T, src: S): T => {
   Object.keys(dest).forEach((key: string) => {
-    if ((src as any)[key]) {
-      const srcValue = (src as any)[key];
+    if ((src as InterfaceType)[key]) {
+      const srcValue = (src as InterfaceType)[key];
       if (That.isObject(srcValue)) {
-        // eslint-disable-next-line no-param-reassign
-        (dest as any)[key] = copyObject(srcValue);
+        (dest as InterfaceType)[key] = copyObject(srcValue);
       } else {
-        // eslint-disable-next-line no-param-reassign
-        (dest as any)[key] = srcValue;
+        (dest as InterfaceType)[key] = srcValue;
       }
     }
   });
 
-  return dest as any;
-};
-
-const objectValues = <T extends Object>(object: T): any[] => {
-  const values: any = [];
-  const rec = (obj: T): void => {
-    Object.keys(obj).forEach((key: string) => {
-      if (That.isObject((obj as any)[key])) {
-        rec((obj as any)[key]);
-      } else {
-        values.push((obj as any)[key]);
-      }
-    });
-  };
-
-  rec(object);
-  return values;
+  return dest;
 };
 
 interface Node {
@@ -117,9 +91,9 @@ interface Node {
 
 class LinkedList {
   private head: Node | null = null;
-  // eslint-disable-next-line lines-between-class-members
+
   private tail: Node | null = null;
-  // eslint-disable-next-line lines-between-class-members
+
   public length: number = 0;
 
   constructor() {
@@ -147,7 +121,7 @@ class LinkedList {
   };
 }
 
-const linkedListObject = <T extends Object>(object: T): LinkedList => {
+const objectToLinkedList = <T extends Object>(object: T): LinkedList => {
   const list = new LinkedList();
   const rec = (value: any): void => {
     Object.keys(value).forEach((key: string) => {
@@ -158,9 +132,34 @@ const linkedListObject = <T extends Object>(object: T): LinkedList => {
       }
     });
   };
-  rec(object);
 
+  rec(object);
   return list;
+};
+
+const objectToMap = <T = InterfaceType>(object: T): Map<string, any> => {
+  const map = new Map();
+  const objectKeys = objectKeysToString(object);
+
+  objectKeys.forEach((key: string) => map.set(key, deepGetValue(object, key)));
+  return map;
+};
+
+const objectToArray = <T = InterfaceType>(object: T): any[] => {
+  const values: any[] = [];
+
+  const rec = (obj: any) => {
+    Object.keys(object).forEach((key: string) => {
+      if (That.isObject((obj as InterfaceType)[key])) {
+        objectToArray((obj as InterfaceType)[key]);
+      } else {
+        values.push((obj as any)[key]);
+      }
+    });
+  };
+
+  rec(object);
+  return values;
 };
 
 export = {
@@ -168,6 +167,8 @@ export = {
   copyDeep,
   objectByKeys,
   objectKeysToString,
-  objectValues,
-  linkedListObject,
+  objectToLinkedList,
+  objectToArray,
+  objectToMap,
+  objectToString,
 };
