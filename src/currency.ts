@@ -1,9 +1,10 @@
-const spaceCurrency = (initialCurrency: number): string => {
+const numberToCurrency = (initialCurrency: number, maxGroup: number): string => {
+  const regex = new RegExp(`\\d{1, ${maxGroup}}`, 'g');
   const value = (Array as any)
     .from(String(initialCurrency))
     .reverse()
     .join('')
-    .match(/\d{1,3}/g)
+    .match(regex)
     ?.reverse()
     .map((o: string) => (Array as any).from(o).reverse().join(''))
     .join(' ');
@@ -11,5 +12,5 @@ const spaceCurrency = (initialCurrency: number): string => {
 };
 
 export = {
-  spaceCurrency,
+  numberToCurrency,
 };
