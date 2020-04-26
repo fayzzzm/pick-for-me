@@ -19,5 +19,7 @@ module.exports = {
     'no-bitwise': 0,
     'import/no-unresolved': 0,
     'implicit-arrow-linebreak': 0,
+    'no-prototype-builtins': 0,
+    'no-param-reassign': 0,
   },
 };
