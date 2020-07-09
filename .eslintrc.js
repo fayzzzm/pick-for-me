@@ -2,8 +2,9 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
+    'jest/globals': true,
   },
-  extends: ['eslint:recommended', 'airbnb-base'],
+  extends: ['eslint:recommended', 'airbnb-base', 'prettier'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
@@ -13,7 +14,7 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', , 'jest'],
   rules: {
     'operator-linebreak': 0,
     'no-bitwise': 0,
@@ -25,5 +26,6 @@ module.exports = {
     'no-plusplus': 0,
     'no-useless-constructor': 0,
     'no-param-reassign': 0,
+    'import/extensions': 'off',
   },
 };
