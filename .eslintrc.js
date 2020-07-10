@@ -4,7 +4,7 @@ module.exports = {
     es6: true,
     'jest/globals': true,
   },
-  extends: ['eslint:recommended', 'airbnb-base', 'prettier'],
+  extends: ['eslint:recommended', 'prettier'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
