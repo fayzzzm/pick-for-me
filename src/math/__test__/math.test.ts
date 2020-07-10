@@ -1,4 +1,4 @@
-import { getRandomNumber, getPrimes } from '../math';
+import { getRandomNumber, getPrimes } from '..';
 
 test('Check Validation of random function', () => {
   expect(typeof getRandomNumber<'number'>(3, 'number')).toBe('number');
