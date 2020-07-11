@@ -1,21 +1,21 @@
 import That from 'that-is';
 import { copyObject } from './copy-object';
 
-type InterfaceType = {
-  [index: string]: any;
+type IDeepObject<T> = {
+    [K in keyof T]: T[K] extends Object ? IDeepObject<T[K]> : T[K];
 };
 
-export const copyDeep = <T = InterfaceType, S = InterfaceType>(dest: T, src: S): T => {
-  Object.keys(dest).forEach((key: string) => {
-    if ((src as InterfaceType)[key]) {
-      const srcValue = (src as InterfaceType)[key];
-      if (That.isObject(srcValue)) {
-        (dest as InterfaceType)[key] = copyObject(srcValue);
-      } else {
-        (dest as InterfaceType)[key] = srcValue;
-      }
-    }
-  });
+export const copyDeep = <T, K>(dest: T, src: K) => {
+    Object.keys(dest).forEach((key: string) => {
+        if (src[key]) {
+            const srcValue = (src as any)[key];
+            if (That.isObject(srcValue)) {
+                (dest as any)[key] = copyObject(srcValue);
+            } else {
+                (dest as any)[key] = srcValue;
+            }
+        }
+    });
 
-  return dest;
+    return dest as T & K;
 };

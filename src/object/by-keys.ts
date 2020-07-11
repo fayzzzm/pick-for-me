@@ -1,13 +1,9 @@
 import { deepGetValue } from './deep-get-value';
 
-type InterfaceType = {
-  [index: string]: any;
-};
-
-export const objectByKeys = <T = InterfaceType>(object: T, keys: string[]) =>
-  keys.reduce((t: Object, key: string) => {
+export const objectByKeys = (object: Record<string, string>, keys: string[]) =>
+  keys.reduce((values, key: string) => {
     const value = deepGetValue(object, key);
-    (t as InterfaceType)[key] = value;
+    values[key] = value;
 
-    return t;
-  }, {});
+    return values;
+  }, {} as Record<string, string>);
