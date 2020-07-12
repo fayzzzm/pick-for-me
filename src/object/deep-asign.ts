@@ -1,18 +1,20 @@
 import That from 'that-is';
 
-export const deepAssign = <T = any>(dest: T, src: S): T & S => {
+type Obj = { [index: string]: any };
+
+export const deepAssign = <T extends Obj, S extends Obj>(dest: T, src: S) => {
     Object.keys(src).forEach((key: string) => {
-        const srcValue = (src as InterfaceType)[key];
+        const srcValue = (src as any)[key];
 
         if (Object.prototype.hasOwnProperty.call(dest, key)) {
-            const destValue = (dest as InterfaceType)[key];
+            const destValue = dest[key];
             if (That.isObject(destValue) && That.isObject(srcValue)) {
                 deepAssign(destValue, srcValue);
             } else {
-                (dest as InterfaceType)[key] = srcValue;
+                (dest as Obj)[key] = srcValue;
             }
         } else {
-            (dest as InterfaceType)[key] = srcValue;
+            (dest as Obj)[key] = srcValue;
         }
     });
 
