@@ -1,24 +1,30 @@
-import That from 'that-is';
+export const objectKeysToString = <T extends { [key: string]: any }>(
+    object: T,
+) => {
+    const strKeys: string[] = [];
+    const deepIntoKey = (
+        obj: { [key: string]: any },
+        keys: string[],
+        isArray?: boolean,
+    ) => {
+        Object.keys(obj).forEach((key: string) => {
+            if (Array.isArray(obj[key])) {
+                deepIntoKey(obj[key], keys.concat(`${key}`), true);
+            } else if (typeof obj[key] === 'object') {
+                deepIntoKey(obj[key], keys.concat(`${key}.`));
+            } else {
+                key = isArray ? `[${key}]` : key;
+                strKeys.push(
+                    keys
+                        .concat(key)
+                        .join('')
+                        .replace(/\.(\[)/g, (_, l) => l),
+                );
+            }
+        });
+    };
 
-type InterfaceType = {
-  [index: string]: any;
-};
+    deepIntoKey(object, []);
 
-export const objectKeysToString = <T = InterfaceType>(object: T): any => {
-  const strKeys: any = [];
-  const deepIntoKey = (obj: any, keys: string[]) => {
-    Object.keys(obj).forEach((key: string) => {
-      if (That.isObject(obj[key])) {
-        deepIntoKey(obj[key], keys.concat(`${key}.`));
-      } else if (That.isArray(obj[key])) {
-        deepIntoKey(obj[key], keys.concat(`[${key}]`));
-      } else {
-        strKeys.push(keys.concat(key).join(''));
-      }
-    });
-  };
-
-  deepIntoKey(object, []);
-
-  return strKeys;
+    return strKeys;
 };

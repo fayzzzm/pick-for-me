@@ -1,22 +1,13 @@
-import That from 'that-is';
+export const objectToArray = <T extends { [key: string]: any }>(
+    object: T,
+): any[] => {
+    return Object.keys(object).reduce((values: any[], key: string) => {
+        if (typeof object[key] === 'object') {
+            values.push(objectToArray(object[key]));
+        } else {
+            values.push(object[key]);
+        }
 
-type InterfaceType = {
-  [index: string]: any;
-};
-
-export const objectToArray = <T = InterfaceType>(object: T): any[] => {
-  const values: any[] = [];
-
-  const rec = (obj: any) => {
-    Object.keys(object).forEach((key: string) => {
-      if (That.isObject((obj as InterfaceType)[key])) {
-        objectToArray((obj as InterfaceType)[key]);
-      } else {
-        values.push((obj as any)[key]);
-      }
-    });
-  };
-
-  rec(object);
-  return values;
+        return values;
+    }, []);
 };
