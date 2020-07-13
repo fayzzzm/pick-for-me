@@ -1,16 +1,14 @@
-export const depthOfArray = (array: any[]) => {
-  let max = 1;
-  const rec = (t: number, arr: any) => {
-    const { length } = arr;
-    for (let i = 0; i < length; i += 1) {
-      if (Array.isArray(arr[i])) {
-        rec(t + 1, arr[i]);
-      } else {
-        max = Math.max(max, t);
-      }
-    }
-  };
+export const depthOfArray = <T>(array: T[] | T) => {
+    if (Array.isArray(array)) {
+        let max = Number.MIN_SAFE_INTEGER;
 
-  rec(0, array);
-  return max;
+        for (let i = 0; i < array.length; i++) {
+            const depth = 1 + depthOfArray(array[i]);
+            max = Math.max(max, depth);
+        }
+
+        return max;
+    } else {
+        return 0;
+    }
 };
