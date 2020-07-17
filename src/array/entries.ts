@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import { RecursiveType } from '@object/types';
 
+
 export const getEntries = <T>(
     item: T | T[],
     entries: string[] = [],
