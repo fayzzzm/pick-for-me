@@ -1,11 +1,16 @@
-import { deepGetValue } from './deep-get-value';
+import { deepGetValue } from '@object/deep-get-value';
+// eslint-disable-next-line no-unused-vars
+import { RecursiveType } from '@object/types';
 
-type Obj = { [index: string]: any };
+export const objectByKeys = <T>(object: T, keys: string[]) => {
+    try {
+        return keys.reduce((values, key: string) => {
+            const value = deepGetValue(object, key) as RecursiveType<T>;
+            values[key] = value;
 
-export const objectByKeys = (object: Obj, keys: string[]) =>
-    keys.reduce((values, key: string) => {
-        const value = deepGetValue(object, key);
-        values[key] = value;
-
-        return values;
-    }, {} as Obj);
+            return values;
+        }, {} as { [K: string]: RecursiveType<T> });
+    } catch (error) {
+        return error;
+    }
+};

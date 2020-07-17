@@ -1,18 +1,23 @@
-export const deepGetValue = <T extends { [key: string]: any }>(
-    value: T,
-    pattern: string,
-): any => {
+export const deepGetValue = <T, K>(value: T, pattern: string): any => {
     if (pattern.length === 0) {
         return value;
+    } else if (typeof value !== 'object' && pattern.length) {
+        throw new Error(`${typeof value} doesn't extend to Object | Array`);
     } else {
         if (/^\.?\w+/.test(pattern)) {
             const key = pattern.match(/^\.?(\w+)/)![1];
-            return deepGetValue(value[key], pattern.replace(/^\.?\w+/, ''));
+            return deepGetValue(
+                (value as { [key: string]: any })[key],
+                pattern.replace(/^\.?\w+/, ''),
+            );
         } else if (/^\[\d+\]/.test(pattern)) {
             const index = pattern.match(/^\[(\d)\]/)![1];
-            return deepGetValue(value[index], pattern.replace(/^\[\d+\]/, ''));
+            return deepGetValue(
+                (value as { [key: string]: any })[index],
+                pattern.replace(/^\[\d+\]/, ''),
+            );
         } else {
-            return 'invalid';
+            throw new Error(`Invalid patter for object`);
         }
     }
 };
