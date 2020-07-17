@@ -1,18 +1,21 @@
-import That from 'that-is';
 import { LinkedList } from 'src/linked-list';
+// eslint-disable-next-line no-unused-vars
+import { RecursiveType } from '@object/types';
 
-export const objectToLinkedList = <T extends Object>(object: T): LinkedList => {
-    const list = new LinkedList();
-    const rec = (value: any): void => {
-        Object.keys(value).forEach((key: string) => {
-            if (That.isObject(value[key])) {
-                rec(value[key]);
-            } else {
-                list.push(value[key]);
-            }
-        });
+export const objectToLinkedList = <T extends { [K: string]: RecursiveType<T> }>(
+    object: T,
+): LinkedList<RecursiveType<T>> => {
+    const list = new LinkedList<RecursiveType<T>>();
+    const getValues = (
+        value: RecursiveType<T> | { [key: string]: RecursiveType<T> },
+    ): void => {
+        for (const keys in value as T) {
+            if (typeof value === 'object')
+                getValues((value as { [key: string]: RecursiveType<T> })[keys]);
+            else list.push(value);
+        }
     };
 
-    rec(object);
+    getValues(object);
     return list;
 };
